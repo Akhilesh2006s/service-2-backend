@@ -1,0 +1,45 @@
+{
+  "name": "inkaranya-backend",
+  "version": "1.0.0",
+  "description": "Backend for Inkaranya - A Platform for Experiential Learning",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "test": "jest",
+    "setup": "node setup.js",
+    "test-setup": "node test-setup.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^8.0.3",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "multer": "^1.4.5-lts.1",
+    "multer-storage-cloudinary": "^4.0.0",
+    "cloudinary": "^1.41.0",
+    "express-validator": "^7.0.1",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5",
+    "compression": "^1.7.4",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "mongodb",
+    "authentication",
+    "dashboard",
+    "experiential-learning"
+  ],
+  "author": "Inkaranya Team",
+  "license": "MIT"
+}
