@@ -379,7 +379,8 @@ router.get('/applications', async (req, res) => {
 // @access  Private (Organization)
 router.put('/applications/:applicationId/status', [
   body('status').isIn(['submitted', 'under-review', 'shortlisted', 'interview-scheduled', 'interviewed', 'accepted', 'rejected']).withMessage('Invalid status'),
-  body('note').optional().trim()
+  body('note').optional().trim(),
+  body('interviewData').optional().isObject().withMessage('Interview data must be an object')
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -416,6 +417,15 @@ router.put('/applications/:applicationId/status', [
     // Update status and add to timeline
     const oldStatus = application.status;
     application.status = req.body.status;
+    
+    // Handle interview data
+    if (req.body.status === 'interview-scheduled' && req.body.interviewData) {
+      application.interviewData = {
+        ...req.body.interviewData,
+        datetime: new Date(req.body.interviewData.datetime),
+        scheduledAt: new Date()
+      };
+    }
     
     application.timeline.push({
       status: req.body.status,

@@ -131,7 +131,7 @@ router.post('/', verifyToken, requireRole(['employee']), async (req, res) => {
         github: processedApplicationData.documents.github
       },
       additionalInfo: processedApplicationData.additionalInfo,
-      status: 'submitted',
+        status: 'submitted',
       submittedAt: new Date()
     });
 
@@ -174,20 +174,20 @@ router.get('/', verifyToken, async (req, res) => {
 
     if (req.user.role === 'employee') {
       // Get employee's applications
-      const employee = await Employee.findOne({ user: req.user._id });
-      if (!employee) {
-        return res.status(404).json({
-          status: 'error',
-          message: 'Employee profile not found'
-        });
-      }
+    const employee = await Employee.findOne({ user: req.user._id });
+    if (!employee) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Employee profile not found'
+      });
+    }
       filter.employee = employee._id;
     } else if (req.user.role === 'organization') {
       // Get organization's received applications
       const organization = await Organization.findOne({ user: req.user._id });
       if (!organization) {
-        return res.status(404).json({
-          status: 'error',
+      return res.status(404).json({
+        status: 'error',
           message: 'Organization profile not found'
         });
       }
@@ -258,10 +258,10 @@ router.get('/:id', verifyToken, async (req, res) => {
     } else if (req.user.role === 'organization') {
       const organization = await Organization.findOne({ user: req.user._id });
       if (!organization || application.organization.toString() !== organization._id.toString()) {
-        return res.status(403).json({
-          status: 'error',
-          message: 'Access denied'
-        });
+      return res.status(403).json({
+        status: 'error',
+        message: 'Access denied'
+      });
       }
     }
 
@@ -285,7 +285,8 @@ router.get('/:id', verifyToken, async (req, res) => {
 // @access  Private (Organization)
 router.put('/:id/status', verifyToken, requireRole(['organization']), [
   body('status').isIn(['submitted', 'reviewing', 'shortlisted', 'interview', 'accepted', 'rejected']).withMessage('Invalid status'),
-  body('note').optional().isString().withMessage('Note must be a string')
+  body('note').optional().isString().withMessage('Note must be a string'),
+  body('interviewData').optional().isObject().withMessage('Interview data must be an object')
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -297,7 +298,7 @@ router.put('/:id/status', verifyToken, requireRole(['organization']), [
       });
     }
 
-    const { status, note } = req.body;
+    const { status, note, interviewData } = req.body;
 
     const organization = await Organization.findOne({ user: req.user._id });
     if (!organization) {
@@ -329,6 +330,15 @@ router.put('/:id/status', verifyToken, requireRole(['organization']), [
         addedBy: req.user._id,
         addedAt: new Date()
       });
+    }
+
+    // Handle interview data
+    if (status === 'interview' && interviewData) {
+      application.interviewData = {
+        ...interviewData,
+        datetime: new Date(interviewData.datetime),
+        scheduledAt: new Date()
+      };
     }
 
     // Set status-specific dates

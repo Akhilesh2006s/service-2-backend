@@ -39,7 +39,9 @@ app.use(cors({
     process.env.FRONTEND_URL || 'http://localhost:5173',
     'http://localhost:8080',
     'http://localhost:8081',
-    'https://service-2-frontend.vercel.app'
+    'https://service-2-frontend.vercel.app',
+    'https://service-2-frontend-hugd938sp-akhilesh2006s-projects.vercel.app',
+    /^https:\/\/service-2-frontend.*\.vercel\.app$/
   ],
   credentials: true
 }));

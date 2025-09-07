@@ -178,6 +178,30 @@ const applicationSchema = new mongoose.Schema({
       default: Date.now
     }
   }],
+  interviewData: {
+    date: String,
+    time: String,
+    datetime: Date,
+    duration: Number,
+    type: {
+      type: String,
+      enum: ['video', 'phone', 'in-person']
+    },
+    location: String,
+    meetingLink: String,
+    notes: String,
+    interviewer: String,
+    interviewerEmail: String,
+    status: {
+      type: String,
+      enum: ['scheduled', 'completed', 'cancelled'],
+      default: 'scheduled'
+    },
+    scheduledAt: {
+      type: Date,
+      default: Date.now
+    }
+  },
   isActive: {
     type: Boolean,
     default: true
